@@ -1,0 +1,25 @@
+Início
+1 - Após despertar abrir o olho
+2 - verificar a hora
+3 - Se não for a hora de levantar:
+	1- retornar a dormir
+4 - se for a hora de levantar:
+	1 - levantar da cama
+5 - Ao levantar espreguiçar
+6 - Ir até o banheiro
+7 - Escovar os dentes
+8 - Tomar banho
+9 - Trocar de roupa
+10 - Ir para a cozinha
+11 - Verificar ingredientes
+12 - Se tiver ingredientes
+	1- continuar para o preparo do café da manhã 
+13 - se não tiver ingredientes
+ 	1 - ir até a padaria
+	2 - Obter os ingredientes
+	3 - Retornar para casa
+14 - Com os ingredientes preparar o café da manhã
+15 - Pôr a mesa
+16 - Tomar café
+17 - Seguir para as demais atividades do dia
+FIM
