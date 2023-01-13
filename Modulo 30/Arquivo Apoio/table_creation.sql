@@ -2,7 +2,6 @@ create table tb_cliente (
 	id bigint,
 	nome varchar(50) not null,
 	cpf bigint not null,
-	tel bigint not null,
 	endereco varchar(50) not null,
 	numero bigint not null,
 	telefone bigint not null,
@@ -10,6 +9,8 @@ create table tb_cliente (
 	estado varchar(50) not null,
 	constraint pk_id_cliente primary key(id)
 );
+
+alter table tb_cliente add column DATA_CADASTRO TIMESTAMPTZ not null;
 
 create table tb_produto(
 	id bigint,
