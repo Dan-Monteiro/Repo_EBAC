@@ -5,6 +5,8 @@ import domain.annotation.Tabela;
 import domain.annotation.TipoChave;
 import domain.generics.Persistente;
 
+import java.time.Instant;
+
 @Tabela("TB_CLIENTE")
 public class Cliente implements Persistente {
 
@@ -32,6 +34,9 @@ public class Cliente implements Persistente {
 
     @ColunaTabela(dbName = "estado", setJavaName = "setEstado")
     private String estado;
+
+    @ColunaTabela(dbName = "data_cadastro", setJavaName = "setDataCadastro")
+    private Instant dataCadastro;
 
     public Long getId() {
         return id;
@@ -95,5 +100,13 @@ public class Cliente implements Persistente {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Instant getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(Instant dataCadastro) {
+        this.dataCadastro = dataCadastro;
     }
 }

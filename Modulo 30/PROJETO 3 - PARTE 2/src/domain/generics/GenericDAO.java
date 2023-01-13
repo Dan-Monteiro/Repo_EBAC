@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +21,7 @@ public abstract class GenericDAO<T extends Persistente, E extends Serializable> 
 
     public abstract Class<T> getTipoClasse();
 
-    public abstract void atualiarDados(T entity, T entityCadastrado);
+    public abstract void atualizarDados(T entity, T entityCadastrado);
 
     protected abstract String getQueryInsercao();
 
@@ -197,7 +198,10 @@ public abstract class GenericDAO<T extends Persistente, E extends Serializable> 
         } else if (classField.equals(String.class)) {
             String val =  rs.getString(fieldName);
             method.invoke(entity, val);
-        } else {
+        } else if (classField.equals(Instant.class)) {
+            Instant val = rs.getTimestamp(fieldName).toInstant();
+            method.invoke(entity, val);
+        }else {
             throw new TipoElementoNaoConhecidoException("TIPO DE CLASSE NÃO CONHECIDO: " + classField);
         }
 

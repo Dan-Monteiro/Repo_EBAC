@@ -12,7 +12,7 @@ public class ClienteFactory {
         cliente.setId(rs.getLong("ID_CLIENTE"));
         cliente.setNome(rs.getString(("NOME")));
         cliente.setCPF(rs.getLong(("CPF")));
-        cliente.setTelefone(rs.getLong(("TEL")));
+        cliente.setTelefone(rs.getLong(("TELEFONE")));
         cliente.setEndereco(rs.getString(("ENDERECO")));
         cliente.setNumero(rs.getInt(("NUMERO")));
         cliente.setCidade(rs.getString(("CIDADE")));

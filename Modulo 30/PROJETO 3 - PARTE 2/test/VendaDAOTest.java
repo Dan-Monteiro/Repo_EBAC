@@ -286,6 +286,7 @@ public class VendaDAOTest {
         cliente.setEstado("SP");
         cliente.setNumero(10);
         cliente.setTelefone(1199999999L);
+        cliente.setDataCadastro(Instant.now());
         clienteDao.cadastrar(cliente);
         return cliente;
     }

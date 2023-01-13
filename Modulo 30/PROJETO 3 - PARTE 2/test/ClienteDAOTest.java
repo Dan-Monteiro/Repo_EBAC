@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.Collection;
 
 import static junit.framework.TestCase.assertTrue;
@@ -39,11 +40,12 @@ public class ClienteDAOTest {
         Cliente cliente = new Cliente();
         cliente.setCPF(12312312312L);
         cliente.setNome("Daniel");
-        cliente.setCidade("São Paulo");
+        cliente.setCidade("Recife");
         cliente.setEndereco("End");
         cliente.setEstado("SP");
         cliente.setNumero(10);
         cliente.setTelefone(1199999999L);
+        cliente.setDataCadastro(Instant.now());
         clienteDao.cadastrar(cliente);
 
         Cliente clienteConsultado = clienteDao.consultar(cliente.getCPF());
@@ -57,11 +59,12 @@ public class ClienteDAOTest {
         Cliente cliente = new Cliente();
         cliente.setCPF(56565656565L);
         cliente.setNome("Daniel");
-        cliente.setCidade("São Paulo");
+        cliente.setCidade("Recife");
         cliente.setEndereco("End");
         cliente.setEstado("SP");
         cliente.setNumero(10);
         cliente.setTelefone(1199999999L);
+        cliente.setDataCadastro(Instant.now());
         Boolean retorno = clienteDao.cadastrar(cliente);
         Assert.assertTrue(retorno);
 
@@ -77,11 +80,12 @@ public class ClienteDAOTest {
         Cliente cliente = new Cliente();
         cliente.setCPF(56565656565L);
         cliente.setNome("Daniel");
-        cliente.setCidade("São Paulo");
+        cliente.setCidade("Recife");
         cliente.setEndereco("End");
         cliente.setEstado("SP");
         cliente.setNumero(10);
         cliente.setTelefone(1199999999L);
+        cliente.setDataCadastro(Instant.now());
         Boolean retorno = clienteDao.cadastrar(cliente);
         Assert.assertTrue(retorno);
 
@@ -98,11 +102,12 @@ public class ClienteDAOTest {
         Cliente cliente = new Cliente();
         cliente.setCPF(56565656565L);
         cliente.setNome("Daniel");
-        cliente.setCidade("São Paulo");
+        cliente.setCidade("Recife");
         cliente.setEndereco("End");
         cliente.setEstado("SP");
         cliente.setNumero(10);
         cliente.setTelefone(1199999999L);
+        cliente.setDataCadastro(Instant.now());
         Boolean retorno = clienteDao.cadastrar(cliente);
         Assert.assertTrue(retorno);
 
@@ -126,22 +131,24 @@ public class ClienteDAOTest {
         Cliente cliente = new Cliente();
         cliente.setCPF(56565656565L);
         cliente.setNome("Daniel");
-        cliente.setCidade("São Paulo");
+        cliente.setCidade("Recife");
         cliente.setEndereco("End");
         cliente.setEstado("SP");
         cliente.setNumero(10);
         cliente.setTelefone(1199999999L);
+        cliente.setDataCadastro(Instant.now());
         Boolean retorno = clienteDao.cadastrar(cliente);
         Assert.assertTrue(retorno);
 
         Cliente cliente1 = new Cliente();
         cliente1.setCPF(56565656569L);
         cliente1.setNome("Daniel");
-        cliente1.setCidade("São Paulo");
+        cliente1.setCidade("Recife");
         cliente1.setEndereco("End");
         cliente1.setEstado("SP");
         cliente1.setNumero(10);
         cliente1.setTelefone(1199999999L);
+        cliente1.setDataCadastro(Instant.now());
         Boolean retorno1 = clienteDao.cadastrar(cliente1);
         Assert.assertTrue(retorno1);
 

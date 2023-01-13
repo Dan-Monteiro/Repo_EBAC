@@ -5,6 +5,7 @@ import domain.model.Cliente;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class ClienteDAO extends GenericDAO<Cliente, Long> implements IClienteDAO {
 
@@ -18,7 +19,7 @@ public class ClienteDAO extends GenericDAO<Cliente, Long> implements IClienteDAO
     }
 
     @Override
-    public void atualiarDados(Cliente entity, Cliente entityCadastrado) {
+    public void atualizarDados(Cliente entity, Cliente entityCadastrado) {
         entityCadastrado.setCidade(entity.getCidade());
         entityCadastrado.setCPF(entity.getCPF());
         entityCadastrado.setEndereco(entity.getEndereco());
@@ -32,8 +33,8 @@ public class ClienteDAO extends GenericDAO<Cliente, Long> implements IClienteDAO
     protected String getQueryInsercao() {
         StringBuilder sb = new StringBuilder();
         sb.append("INSERT INTO TB_CLIENTE ");
-        sb.append("(ID, NOME, CPF, TEL, ENDERECO, NUMERO, CIDADE, ESTADO)");
-        sb.append("VALUES (nextval('sq_cliente'),?,?,?,?,?,?,?)");
+        sb.append("(ID, NOME, CPF, TELEFONE, ENDERECO, NUMERO, CIDADE, ESTADO, DATA_CADASTRO)");
+        sb.append("VALUES (nextval('sq_cliente'),?,?,?,?,?,?,?,?)");
         return sb.toString();
     }
 
@@ -52,7 +53,7 @@ public class ClienteDAO extends GenericDAO<Cliente, Long> implements IClienteDAO
         StringBuilder sb = new StringBuilder();
         sb.append("UPDATE TB_CLIENTE ");
         sb.append("SET NOME = ?,");
-        sb.append("TEL = ?,");
+        sb.append("TELEFONE = ?,");
         sb.append("ENDERECO = ?,");
         sb.append("NUMERO = ?,");
         sb.append("CIDADE = ?,");
@@ -70,6 +71,7 @@ public class ClienteDAO extends GenericDAO<Cliente, Long> implements IClienteDAO
         stmInsert.setLong(5, entity.getNumero());
         stmInsert.setString(6, entity.getCidade());
         stmInsert.setString(7, entity.getEstado());
+        stmInsert.setTimestamp(8, Timestamp.from(entity.getDataCadastro()));
     }
 
     @Override
@@ -87,5 +89,4 @@ public class ClienteDAO extends GenericDAO<Cliente, Long> implements IClienteDAO
     protected void setParametrosQuerySelect(PreparedStatement stmSelect, Long valor) throws SQLException {
         stmSelect.setLong(1, valor);
     }
-
 }

@@ -9,6 +9,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Instant;
+
 public class ClienteServiceTest {
 
     private IClienteService clienteService;
@@ -30,7 +32,7 @@ public class ClienteServiceTest {
         cliente.setEstado("SP");
         cliente.setNumero(10);
         cliente.setTelefone(1199999999L);
-
+        cliente.setDataCadastro(Instant.now());
     }
 
     @Test
