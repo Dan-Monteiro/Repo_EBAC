@@ -21,6 +21,8 @@ create table tb_produto(
 	constraint pk_id_produto primary key(id)
 );
 
+alter table tb_produto add column MARCA varchar(50) not null;
+
 create table tb_venda(
 	id bigint,
 	codigo varchar(10) not null,
