@@ -45,6 +45,13 @@ create table tb_produto_quantidade(
 	constraint fk_id_prod_venda_venda foreign key(id_venda_fk) references tb_venda(id)
 );
 
+create table tb_estoque_produto (
+	id bigint not null,
+	id_produto_fk bigint not null,
+	quantidade bigint not null check (quantidade >= 0),
+	constraint fk_id_produto foreign key(id_produto_fk) references tb_produto(id) ON DELETE CASCADE
+);
+
 create sequence sq_cliente
 start 1
 increment 1
@@ -64,6 +71,11 @@ create sequence sq_produto_quantidade
 start 1
 increment 1
 owned by tb_produto_quantidade.id;
+
+create sequence sq_estoque_produto
+start 1
+increment 1
+owned by tb_estoque_produto.id;
 
 ALTER TABLE TB_CLIENTE
 ADD CONSTRAINT UK_CPF_CLIENTE UNIQUE (CPF);
