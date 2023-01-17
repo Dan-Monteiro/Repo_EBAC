@@ -7,6 +7,8 @@ import domain.exceptions.MaisDeUmRegistroException;
 import domain.exceptions.TableException;
 import domain.exceptions.TipoChaveNaoEncontradaException;
 import domain.generics.GenericDAO;
+import domain.model.EstoqueProduto;
+import domain.model.Produto;
 import domain.model.ProdutoQuantidade;
 import domain.model.Venda;
 
@@ -136,9 +138,9 @@ public class VendaDAO extends GenericDAO<Venda, String> implements IVendaDAO {
             if (rs.next()) {
                 Venda venda = VendaFactory.convert(rs);
                 buscarAssociacaoVendaProdutos(connection, venda);
+                buscarAssociacaoEstoqueProdutos(connection, venda);
                 return venda;
             }
-
         } catch (SQLException e) {
             throw new DAOException("ERRO CONSULTANDO OBJETO ", e);
         } finally {
@@ -172,6 +174,18 @@ public class VendaDAO extends GenericDAO<Venda, String> implements IVendaDAO {
             throw new DAOException("ERRO CONSULTANDO OBJETO ", e);
         } finally {
             closeConnection(connection, stmProd, rsProd);
+        }
+    }
+
+    public void buscarAssociacaoEstoqueProdutos(Connection connection, Venda venda) throws MaisDeUmRegistroException, DAOException, TableException {
+        PreparedStatement stmProd = null;
+        ResultSet rsProd = null;
+        IEstoqueProdutoDAO estoqueProdutoDAO = new EstoqueProdutoDAO();
+        for (ProdutoQuantidade produtoQtd: venda.getProdutos()) {
+            EstoqueProduto estoqueProduto = estoqueProdutoDAO.consultar( produtoQtd.getProduto().getId());
+            if (estoqueProduto != null) {
+                venda.getEstoqueProduto().add(estoqueProduto);
+            }
         }
     }
 
@@ -227,10 +241,29 @@ public class VendaDAO extends GenericDAO<Venda, String> implements IVendaDAO {
                     setParametrosQueryInsercaoProdQuant(stm, entity, prod);
                     rowsAffected = stm.executeUpdate();
                 }
+
+                for (EstoqueProduto estoqueProd : entity.getEstoqueProduto()) {
+                    EstoqueProdutoDAO estoqueDAO = new EstoqueProdutoDAO();
+                    EstoqueProduto estoqueProduto = estoqueDAO.consultar(estoqueProd.getProduto().getId());
+                    if (estoqueProduto == null) {
+                        estoqueProd.setQuantidade(estoqueProd.getQuantidadeMov(estoqueProd.getQuantidade()));
+                        estoqueDAO.cadastrar(estoqueProd);
+                    } else {
+                        estoqueProduto.setQuantidade(estoqueProd.getQuantidadeMov(estoqueProduto.getQuantidade()));
+                        estoqueDAO.alterar(estoqueProduto);
+                        entity.getEstoqueProduto().add(estoqueProduto);
+                    }
+                }
+                HashSet<EstoqueProduto> listaAux = new HashSet<>(entity.getEstoqueProduto());
+                listaAux.forEach(item -> {
+                    if (item.getId() == null) {
+                        entity.getEstoqueProduto().remove(item);
+                    }
+                });
                 return true;
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | MaisDeUmRegistroException | TableException e) {
             throw new DAOException("ERRO CADASTRANDO OBJETO ", e);
         } finally {
             closeConnection(connection, stm, null);
@@ -252,4 +285,5 @@ public class VendaDAO extends GenericDAO<Venda, String> implements IVendaDAO {
         stm.setInt(3, prod.getQuantidade());
         stm.setBigDecimal(4, prod.getValorTotal());
     }
+
 }

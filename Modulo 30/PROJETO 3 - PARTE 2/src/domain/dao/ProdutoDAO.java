@@ -1,6 +1,11 @@
 package domain.dao;
 
+import domain.exceptions.DAOException;
+import domain.exceptions.MaisDeUmRegistroException;
+import domain.exceptions.TableException;
+import domain.exceptions.TipoChaveNaoEncontradaException;
 import domain.generics.GenericDAO;
+import domain.model.EstoqueProduto;
 import domain.model.Produto;
 
 import java.sql.PreparedStatement;
@@ -15,6 +20,26 @@ public class ProdutoDAO extends GenericDAO<Produto, String> implements IProdutoD
     @Override
     public Class<Produto> getTipoClasse() {
         return Produto.class;
+    }
+
+    @Override
+    public Boolean cadastrar(Produto entity) throws TipoChaveNaoEncontradaException, DAOException {
+        boolean result = super.cadastrar(entity);
+        IEstoqueProdutoDAO estoqueProdutoDAO;
+        if(result) {
+            try {
+                EstoqueProduto estoqueProduto = new EstoqueProduto();
+                estoqueProdutoDAO = new EstoqueProdutoDAO();
+                Produto produto = this.consultar(entity.getCodigo());
+                produto.setQuantidadeInicial(entity.getQuantidadeInicial());
+                estoqueProduto.populateEstoqueProduto(produto);
+                boolean resultEstoque = estoqueProdutoDAO.cadastrar(estoqueProduto);
+                return resultEstoque;
+            } catch (MaisDeUmRegistroException | TableException e) {
+                throw new DAOException("ERRO CADASTRANDO OBJETO ", e);
+            }
+        }
+        return false;
     }
 
     @Override

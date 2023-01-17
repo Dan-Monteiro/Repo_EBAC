@@ -40,6 +40,8 @@ public class Venda implements Persistente {
     //@ColunaTabela(dbName = "id", setJavaName = "setId")
     private Set<ProdutoQuantidade> produtos;
 
+    private Set<EstoqueProduto> estoqueProduto;
+
     @ColunaTabela(dbName = "valor_total", setJavaName = "setValorTotal")
     private BigDecimal valorTotal;
 
@@ -51,6 +53,7 @@ public class Venda implements Persistente {
 
     public Venda() {
         produtos = new HashSet<>();
+        estoqueProduto = new HashSet<>();
     }
 
     public String getCodigo() {
@@ -77,6 +80,9 @@ public class Venda implements Persistente {
         validarStatus();
         Optional<ProdutoQuantidade> op =
                 produtos.stream().filter(filter -> filter.getProduto().getCodigo().equals(produto.getCodigo())).findAny();
+        Optional<EstoqueProduto> opEstoque =
+                estoqueProduto.stream().filter(filter -> filter.getIdProdutoFk().equals(produto.getId())).findAny();
+
         if (op.isPresent()) {
             ProdutoQuantidade produtpQtd = op.get();
             produtpQtd.adicionar(quantidade);
@@ -87,6 +93,23 @@ public class Venda implements Persistente {
             prod.adicionar(quantidade);
             produtos.add(prod);
         }
+
+        if (op.isPresent() && opEstoque.isPresent()) {
+            EstoqueProduto estoqueProduto = opEstoque.get();
+            estoqueProduto.setProduto(produto);
+            estoqueProduto.setIdProdutoFk(produto.getId());
+            estoqueProduto.setQuantidade(quantidade);
+            estoqueProduto.setSaida(true);
+        } else {
+            // Criar fabrica para criar EstoqueProduto
+            EstoqueProduto etqProd = new EstoqueProduto();
+            etqProd.setIdProdutoFk(produto.getId());
+            etqProd.setProduto(produto);
+            etqProd.setQuantidade(quantidade);
+            etqProd.setSaida(true);
+            estoqueProduto.add(etqProd);
+        }
+
         recalcularValorTotalVenda();
     }
 
@@ -101,21 +124,38 @@ public class Venda implements Persistente {
         Optional<ProdutoQuantidade> op =
                 produtos.stream().filter(filter -> filter.getProduto().getCodigo().equals(produto.getCodigo())).findAny();
 
+        Optional<EstoqueProduto> opEstoque =
+                estoqueProduto.stream().filter(filter -> filter.getIdProdutoFk().equals(produto.getId())).findAny();
+
         if (op.isPresent()) {
             ProdutoQuantidade produtpQtd = op.get();
             if (produtpQtd.getQuantidade()>quantidade) {
                 produtpQtd.remover(quantidade);
-                recalcularValorTotalVenda();
             } else {
                 produtos.remove(op.get());
-                recalcularValorTotalVenda();
             }
 
         }
+
+        if (op.isPresent() && opEstoque.isPresent()) {
+            EstoqueProduto estoqueProduto = opEstoque.get();
+            estoqueProduto.setQuantidade(quantidade);
+            estoqueProduto.setSaida(false);
+        } else {
+            // Criar fabrica para criar EstoqueProduto
+            EstoqueProduto etqProd = new EstoqueProduto();
+            etqProd.setProduto(produto);
+            etqProd.setQuantidade(quantidade);
+            etqProd.setSaida(false);
+            estoqueProduto.add(etqProd);
+        }
+
+        recalcularValorTotalVenda();
     }
 
     public void removerTodosProdutos() {
         validarStatus();
+        estoqueProduto.clear();
         produtos.clear();
         valorTotal = BigDecimal.ZERO;
     }
@@ -170,5 +210,9 @@ public class Venda implements Persistente {
 
     public void setProdutos(Set<ProdutoQuantidade> produtos) {
         this.produtos = produtos;
+    }
+
+    public Set<EstoqueProduto> getEstoqueProduto() {
+        return estoqueProduto;
     }
 }

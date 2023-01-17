@@ -29,6 +29,12 @@ public class Produto implements Persistente {
     @ColunaTabela(dbName = "marca", setJavaName = "setMarca")
     private String marca;
 
+    public Produto() {
+        this.quantidadeInicial = 0;
+    }
+
+    private Integer quantidadeInicial;
+
     public String getCodigo() {
         return codigo;
     }
@@ -75,5 +81,13 @@ public class Produto implements Persistente {
 
     public void setMarca(String marca) {
         this.marca = marca;
+    }
+
+    public Integer getQuantidadeInicial() {
+        return quantidadeInicial;
+    }
+
+    public void setQuantidadeInicial(Integer quantidadeInicial) {
+        this.quantidadeInicial = quantidadeInicial;
     }
 }
