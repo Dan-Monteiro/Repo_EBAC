@@ -1,9 +1,12 @@
+import domain.dao.EstoqueProdutoDAO;
+import domain.dao.IEstoqueProdutoDAO;
 import domain.dao.IProdutoDAO;
 import domain.dao.ProdutoDAO;
 import domain.exceptions.DAOException;
 import domain.exceptions.MaisDeUmRegistroException;
 import domain.exceptions.TableException;
 import domain.exceptions.TipoChaveNaoEncontradaException;
+import domain.model.EstoqueProduto;
 import domain.model.Produto;
 import org.junit.After;
 import org.junit.Assert;
@@ -17,9 +20,11 @@ import static org.junit.Assert.*;
 public class ProdutoDAOTest {
 
     private IProdutoDAO produtoDao;
+    private IEstoqueProdutoDAO estoqueProdutoDAO;
 
     public ProdutoDAOTest() {
         produtoDao = new ProdutoDAO();
+        estoqueProdutoDAO = new EstoqueProdutoDAO();
     }
 
     @After
@@ -42,8 +47,20 @@ public class ProdutoDAOTest {
         produto.setNome("Produto 1");
         produto.setValor(BigDecimal.TEN);
         produto.setMarca("Marca");
+        produto.setQuantidadeInicial(10);
         produtoDao.cadastrar(produto);
         return produto;
+    }
+
+    @Test
+    public void criaProdutoComQuantidadeInicialEstoqueProduto() throws TipoChaveNaoEncontradaException, DAOException, MaisDeUmRegistroException, TableException {
+        Produto produto = criarProduto("Codigo 1");
+        Produto produtoBD = produtoDao.consultar(produto.getCodigo());
+        EstoqueProduto estoqueProduto = estoqueProdutoDAO.consultar(produtoBD.getId());
+
+        assertNotNull(produtoBD);
+        assertNotNull(estoqueProduto);
+        assertEquals(10, (int) estoqueProduto.getQuantidade());
     }
 
     private void excluir(String valor) throws DAOException {
@@ -56,7 +73,7 @@ public class ProdutoDAOTest {
         assertNotNull(produto);
         Produto produtoDB = this.produtoDao.consultar(produto.getCodigo());
         assertNotNull(produtoDB);
-        excluir(produtoDB.getCodigo());
+        //excluir(produtoDB.getCodigo());
     }
 
     @Test

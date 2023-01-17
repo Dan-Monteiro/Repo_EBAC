@@ -5,6 +5,7 @@ import domain.exceptions.TableException;
 import domain.exceptions.TipoChaveNaoEncontradaException;
 import domain.generics.jdbc.ConnectionFactory;
 import domain.model.Cliente;
+import domain.model.EstoqueProduto;
 import domain.model.Produto;
 import domain.model.Venda;
 import org.junit.After;
@@ -30,6 +31,8 @@ public class VendaDAOTest {
 
     private IProdutoDAO produtoDao;
 
+    private IEstoqueProdutoDAO estoqueProdutoDAO;
+
     private Cliente cliente;
 
     private Produto produto;
@@ -38,6 +41,7 @@ public class VendaDAOTest {
         vendaDao = new VendaDAO();
         clienteDao = new ClienteDAO();
         produtoDao = new ProdutoDAO();
+        estoqueProdutoDAO = new EstoqueProdutoDAO();
     }
 
     @Before
@@ -75,10 +79,14 @@ public class VendaDAOTest {
     public void salvar() throws TipoChaveNaoEncontradaException, DAOException, MaisDeUmRegistroException, TableException {
         Venda venda = criarVenda("A2");
         Boolean retorno = vendaDao.cadastrar(venda);
-        assertTrue(retorno);
 
+        Produto produtoBD = produtoDao.consultar(produto.getCodigo());
+        EstoqueProduto estoqueProduto = estoqueProdutoDAO.consultar(produtoBD.getId());
+
+        assertTrue(retorno);
         assertTrue(venda.getValorTotal().equals(BigDecimal.valueOf(20)));
         assertTrue(venda.getStatus().equals(Venda.Status.INICIADA));
+        assertEquals(8, (int) estoqueProduto.getQuantidade());
 
         Venda vendaConsultada = vendaDao.consultar(venda.getCodigo());
         assertTrue(vendaConsultada.getId() != null);
@@ -107,17 +115,28 @@ public class VendaDAOTest {
         String codigoVenda = "A4";
         Venda venda = criarVenda(codigoVenda);
         Boolean retorno = vendaDao.cadastrar(venda);
+        Produto produtoBD = produtoDao.consultar(produto.getCodigo());
+        EstoqueProduto estoqueProduto = estoqueProdutoDAO.consultar(produtoBD.getId());
+
         assertTrue(retorno);
         assertNotNull(venda);
         assertEquals(codigoVenda, venda.getCodigo());
+        assertEquals(8, (int) estoqueProduto.getQuantidade());
 
         Venda vendaConsultada = vendaDao.consultar(codigoVenda);
         vendaConsultada.adicionarProduto(produto, 1);
+
+        estoqueProduto = estoqueProdutoDAO.consultar(produtoBD.getId());
+
+        EstoqueProduto finalEstoqueProduto = estoqueProduto;
+        Integer quantidadeProdutoEstoqueMov = vendaConsultada.getEstoqueProduto().stream()
+                .filter(item -> item.getIdProdutoFk().equals(produto.getId())).reduce(0, (partialResult, estoqueProd) -> partialResult + estoqueProd.getQuantidadeMov(finalEstoqueProduto.getQuantidade()), Integer::sum);
 
         assertTrue(vendaConsultada.getQuantidadeTotalProdutos() == 3);
         BigDecimal valorTotal = BigDecimal.valueOf(30).setScale(2, RoundingMode.HALF_DOWN);
         assertTrue(vendaConsultada.getValorTotal().equals(valorTotal));
         assertTrue(vendaConsultada.getStatus().equals(Venda.Status.INICIADA));
+       assertEquals(7, (int) quantidadeProdutoEstoqueMov);
     }
 
     @Test
@@ -273,6 +292,8 @@ public class VendaDAOTest {
         produto.setDescricao("Produto 1");
         produto.setNome("Produto 1");
         produto.setValor(valor);
+        produto.setMarca("Marc4");
+        produto.setQuantidadeInicial(10);
         produtoDao.cadastrar(produto);
         return produto;
     }
