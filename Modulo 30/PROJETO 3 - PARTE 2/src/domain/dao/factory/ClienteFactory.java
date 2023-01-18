@@ -17,6 +17,7 @@ public class ClienteFactory {
         cliente.setNumero(rs.getInt(("NUMERO")));
         cliente.setCidade(rs.getString(("CIDADE")));
         cliente.setEstado(rs.getString(("ESTADO")));
+        cliente.setDataCadastro(rs.getTimestamp("DATA_CADASTRO").toInstant());
         return cliente;
     }
 }
