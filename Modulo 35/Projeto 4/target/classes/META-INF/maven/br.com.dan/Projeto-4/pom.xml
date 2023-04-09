@@ -8,14 +8,14 @@
   <artifactId>Projeto-4</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Proeto 4</name>
+  <name>Projeto 4</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -25,11 +25,31 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+	<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+	<dependency>
+	    <groupId>org.postgresql</groupId>
+	    <artifactId>postgresql</artifactId>
+	    <version>42.5.1</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+	<dependency>
+	    <groupId>org.hibernate</groupId>
+	    <artifactId>hibernate-core</artifactId>
+	    <version>5.6.14.Final</version>
+	</dependency>
     <dependency>
-    	<groupId>org.hibernate.orm</groupId>
-    	<artifactId>hibernate-core</artifactId>
-    	<version>6.2.0.Final</version>
-    </dependency>
+	    <groupId>org.hibernate.javax.persistence</groupId>
+	    <artifactId>hibernate-jpa-2.1-api</artifactId>
+	    <version>1.0.0.Final</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-orm</artifactId>
+	    <version>3.1.1.RELEASE</version>
+	</dependency>
+	
+	
   </dependencies>
 
   <build>
