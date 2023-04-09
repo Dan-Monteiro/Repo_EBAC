@@ -89,3 +89,6 @@ local.properties
 #Workspace Stuff
 .classpath
 .project
+
+#Maven
+target/
