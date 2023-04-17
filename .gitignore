@@ -86,9 +86,19 @@ local.properties
 .scala_dependencies
 .worksheet
 
-#Workspace Stuff
+# Workspace Stuff
 .classpath
 .project
 
-#Maven
+# Arquivos de dependências do Maven
 target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/wrapper/maven-wrapper.jar
+dependency-reduced-pom.xml
+*.lastUpdated
